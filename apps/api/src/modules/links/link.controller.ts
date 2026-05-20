@@ -183,6 +183,38 @@ export class LinkController {
     );
     res.json({ success: true, data: scheduled });
   });
+ 
 
+
+
+
+
+   // cancel a scheduled swap
+  cancelScheduledSwap = asyncHandler(async (req: Request, res: Response) => {
+    const { swapId } = req.params;
+    const userId = req.user.id;
+
+    await this.service.cancelScheduledSwap(swapId, userId);
+    res.json({ success: true, message: 'Scheduled swap cancelled' });
+  });
+
+  // activate backup link (if the  primary breaks)
+  activateBackupLink = asyncHandler(async (req: Request, res: Response) => {
+    const { linkId } = req.params;
+    const { profileId } = req.body;
+    const userId = req.user.id;
+
+    const result = await this.service.activateBackupLink(
+      linkId,
+      profileId,
+      userId
+    );
+
+    res.json({
+      success: true,
+      data: result,
+      message: 'Backup link activated',
+    });
+  });
  
 }
