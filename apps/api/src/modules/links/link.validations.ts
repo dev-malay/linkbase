@@ -1,4 +1,4 @@
-import { z } from 'zod';
+}import { z } from 'zod';
 
 export class LinkValidations {
   static createLink = z.object({
@@ -9,7 +9,6 @@ export class LinkValidations {
       description: z.string().max(500).optional(),
       position: z.number().int().positive().optional(),
       backupUrl: z.string().url().optional(),
-
     }),
   });
 
@@ -25,12 +24,10 @@ export class LinkValidations {
   static swapLink = z.object({
     body: z.object({
       profileId: z.string().uuid(),
-      swapWithLinkId: z.string().uuid().optional(), 
-      
-    })
+      swapWithLinkId: z.string().uuid().optional(), // if swapping with specific link
+      // If not provided, uses current featured link
+    }),
   });
-
-
 
   static reorderLinks = z.object({
     body: z.object({
@@ -49,6 +46,5 @@ export class LinkValidations {
       swapWithLinkId: z.string().uuid().optional(),
       note: z.string().optional(),
     }),
-  })
-
+  });
 }
