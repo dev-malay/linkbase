@@ -303,7 +303,7 @@ CREATE TABLE api_keys (
   INDEX idx_key_hash (key_hash)
 );
 
--- Visitor sessions (for personalization)
+-- visitor sessions (for personalization)
 CREATE TABLE visitor_sessions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   profile_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
@@ -320,3 +320,33 @@ CREATE TABLE visitor_sessions (
   INDEX idx_session_id (session_id),
   INDEX idx_ip_hash (ip_hash)
 );
+
+
+model SwapHistory {
+  id        String   @id @default(cuid())
+  profileId String
+  fromLinkId String
+  toLinkId  String
+  swappedAt DateTime @default(now())
+  revertedAt DateTime?
+
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  fromLink  Link    @relation("fromLink", fields: [fromLinkId], references: [id], onDelete: Restrict)
+  toLink    Link    @relation("toLink", fields: [toLinkId], references: [id], onDelete: Restrict)
+
+  @@index([profileId])
+  @@index([swappedAt])
+}
+
+// update Profile model
+model Profile {
+  // ... existing fields ...
+  swapHistories SwapHistory[]
+}
+
+// pdatet Link model
+model Link {
+  // ... existing fields ...
+  swappedFromHistory SwapHistory[] @relation("fromLink")
+  swappedToHistory   SwapHistory[] @relation("toLink")
+}
