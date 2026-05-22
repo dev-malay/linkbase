@@ -1,38 +1,16 @@
-import express, { Express, Request, Response } from 'express'
-import cors from 'cors'
-import helmet from 'helmet'
-import { config } from 'dotenv'
+import express from 'express';
+import linkRoutes from './modules/links/link.routes';
+import authRoutes from './modules/auth/auth.routes';
+import { errorHandler } from './middleware/error';
+import { authMiddleware } from './middleware/auth';
 
-config()
+const app = express();
 
-import { captureVisitorContext } from './middleware/visitor-enrichment'
-import { errorMiddleware } from './middleware/error.middleware'
-import { authenticate } from './middleware/auth.middleware'
-import apiRoutes from './routes'
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-const app: Express = express()
+app.use('/api/auth', authRoutes);
+app.use('/api/links', authMiddleware, linkRoutes);
+app.use(errorHandler);
 
-app.use(helmet())
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true,
-}))
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-
-app.use(captureVisitorContext)
-app.get('/health', (req: Request, res: Response) => {
-  res.json({
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-    service: 'linkbase-api',
-  })
-})
-
-
-app.use('/api', apiRoutes)
-
-
-app.use(errorMiddleware)
-
-export default app
+export default app;
