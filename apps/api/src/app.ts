@@ -4,8 +4,12 @@ import authRoutes from './modules/auth/auth.routes';
 import { errorHandler } from './middleware/error';
 import { authMiddleware } from './middleware/auth';
 import presetRoutes from './modules/presets/preset.routes';
+import intelligenceRoutes from './modules/intelligence/intelligence.routes';
 
 const app = express();
+
+
+app.use('/api/intelligence', authMiddleware, intelligenceRoutes);
 
 app.use('/api/presets', authMiddleware, presetRoutes);
 app.use(express.json());
