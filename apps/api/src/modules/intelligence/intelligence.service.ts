@@ -13,11 +13,9 @@ export class IntelligenceService {
   constructor() {
     this.repository = new IntelligenceRepository();
   }
-
-  // ===== OPTIMIZATION SETTINGS =====
+// optimization settings 
 
   async getOptimizationSettings(profileId: string, userId: string) {
-    // Verify ownership
     const profile = await prisma.profile.findFirst({
       where: { id: profileId, userId },
     });
