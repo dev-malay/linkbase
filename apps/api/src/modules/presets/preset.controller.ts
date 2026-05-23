@@ -223,6 +223,39 @@ export class PresetController {
     res.json({ success: true, data: rules })
   });
 
+  // fix - added schedule 
+  schedulePresetActivation = asyncHandler(async (req:Request, res:Response) => {
+    const { presetId} = req.params;
+    const userId = req.user.id;
+
+    const scheduled = await this.service.schedulePresetActivation(
+      presetId,
+      req.body,
+      userId
+    );
+    res.status(201).json({ success: true, data: scheduled });
+  });
+
+  getScheduledActivations = asyncHandler(async (req: Request, res: Response) => {
+    const { profileId } = req.params;
+    const userId = req.user.id;
+
+    const scheduled = await this.service.getScheduledActivations(
+      profileId,
+      userId
+    );
+    res.json({ success: true, data: scheduled });
+  });
+
+  cancelScheduledActivation = asyncHandler(async (req: Request, res: Response) => {
+    const { presetId, scheduleId } = req.params;
+    const userId = req.user.id;
+
+    await this.service.cancelScheduledActivation(presetId, scheduleId, userId);
+    res.json({ success: true, message: 'Scheduled activation cancelled' });
+  });
+
+
   exportPresetAsTemplate = asyncHandler(async (req:Request, res:Response) =>{
     const { presetId } = req.params;
     const userId = req.user.id;
