@@ -70,6 +70,41 @@ router.post('/profile/:profileId/compare-rankings',
 router.post('/:rankingId/revert',
   controller.revertToRanking.bind(controller)
 )
+
+
+
+
+
+
+// ab testingg 
+
+router.post('/profile/:profileId/ab-test/start',
+  validateRequest(IntelligenceValidations.startABTest),
+  controller.startABTest.bind(controller)
+);
+router.get('/ab-test/:testId',
+  controller.getABTestStatus.bind(controller)
+)
+
+router.get('/profile/:profileId/ab-tests/active',
+  controller.getActiveABTests.bind(controller)
+);
+
+router.post('/ab-test/:testId/end',
+  controller.endABTest.bind(controller)
+);
+
+router.get('/ab-test/:testId/results',
+  controller.getABTestResults.bind(controller)
+);
+
+router.post('/ab-test/:testId/apply-winner',
+  controller.applyABTestWinner.bind(controller)
+);
+
+
+
+
 // analytics n insightss 
 
 router.get('/profile/:profileId/leaderboard',
