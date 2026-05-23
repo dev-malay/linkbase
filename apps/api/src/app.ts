@@ -3,9 +3,11 @@ import linkRoutes from './modules/links/link.routes';
 import authRoutes from './modules/auth/auth.routes';
 import { errorHandler } from './middleware/error';
 import { authMiddleware } from './middleware/auth';
+import presetRoutes from './modules/presets/preset.routes';
 
 const app = express();
 
+app.use('/api/presets', authMiddleware, presetRoutes);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
