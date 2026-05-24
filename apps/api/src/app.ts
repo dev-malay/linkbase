@@ -5,9 +5,12 @@ import { errorHandler } from './middleware/error';
 import { authMiddleware } from './middleware/auth';
 import presetRoutes from './modules/presets/preset.routes';
 import intelligenceRoutes from './modules/intelligence/intelligence.routes';
+import audienceRoutes from './modules/audience/audience.routes';
+
 
 const app = express();
 
+app.use('/api/audience', audienceRoutes);
 
 app.use('/api/intelligence', authMiddleware, intelligenceRoutes);
 
