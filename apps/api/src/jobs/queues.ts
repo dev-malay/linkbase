@@ -1,5 +1,7 @@
 import Queue from 'bull';
 import redis from 'redis';
+import { redis } from '../config/redis';
+import { Queue } from 'bull';
 
 const redisClient = redis.createClient({
   host: process.env.REDIS_HOST || 'localhost',
@@ -52,3 +54,15 @@ export const linkOptimizationQueue = new Queue('link-optimization', {
     removeOnComplete: true,
   },
 });
+
+
+
+
+export const timeoutQueue = new Queue('timeout', {
+  redis: redis.options,
+});
+
+timeoutQueue.process('monitor-timeout', 5, require('./processors/timeout.processor').monitorTimeout);
+timeoutQueue.process('execute-scheduled-change', 5, require('./processors/timeout.processor').executeScheduledChange);
+timeoutQueue.process('start-variant-test', 2, require('./processors/timeout.processor').startVariantTest);
+timeoutQueue.process('increment-visitor-count', 10, require('./processors/timeout.processor').incrementVisitorCount);
